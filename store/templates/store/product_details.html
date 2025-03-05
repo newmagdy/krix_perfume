@@ -1,0 +1,416 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - Krix</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+        .navbar {
+            height: 65px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand img {
+            height: 45px;
+        }
+        .nav-link {
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #ff4d6d;
+        }
+        .hero-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 80px 50px;
+        }
+        .hero-content {
+            max-width: 55%;
+        }
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #222;
+        }
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: center;
+            max-width: 1200px;
+            margin: 50px;
+            padding: 40px;
+           
+        }
+        .image-section {
+            flex: 1;
+            max-width: 500px;
+            text-align: left;
+            margin-right: 60px;
+        }
+        .product-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: fill;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .thumbnail-container {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 10px;
+        }
+        .thumbnail {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .thumbnail.active {
+            border-color: black;
+        }
+        .details-section {
+            flex: 1;
+            max-width: 500px;
+            padding: 20px;
+        }
+        .product-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .product-description {
+            font-size: 16px;
+            color: #555;
+        }
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+        }
+        .discount {
+            font-size: 16px;
+            color: red;
+            margin-left: 10px;
+            text-decoration: line-through;
+        }
+        .quantity-box {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            margin: 0 10px;
+        }
+        .cart-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .cart-btn:hover {
+            background-color: #333;
+        }
+        .footer {
+                background-color: #222;
+                color: #fff;
+                margin-top: 50px;
+                
+            }
+
+            .footer h5 {
+                color: #ff4d6d;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+
+            .footer a {
+                color: #fff;
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+
+            .footer a:hover {
+                color: #ff4d6d;
+            }
+
+            .footer .text-muted {
+                color: #aaa !important;
+            }
+
+            .footer .border-top {
+                border-color: #444 !important;
+            }
+            .back-arrow {
+                position: absolute;
+                top: 80px; 
+                left: 20px;
+                font-size: 24px;
+                color: black;
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+
+
+            .back-arrow:hover {
+                color: #ff4d6d;
+            }
+            .success-popup {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #28a745;
+                color: white;
+                padding: 15px 30px;
+                border-radius: 5px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                display: none;
+            }
+
+        @media (max-width: 992px) {
+            .navbar-collapse {
+                background-color: white; 
+                padding: 10px;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            }
+            .navbar-nav .nav-link {
+                color: #333 !important; 
+            }
+            .navbar-nav .nav-link:hover {
+                color: #ff4d6d !important; 
+            }
+            .navbar-toggler {
+                order: 0; /* Move the toggler to the right */
+            }
+            .navbar-brand {
+                order: 0; /* Keep the logo on the left */
+            }
+            .nav-link.d-lg-none {
+                order: 0; /* Move the cart icon to the middle */
+                margin-left: auto; /* Push it to the right */
+                margin-right: 10px; /* Add some spacing */
+            }
+        }
+        @media (max-width: 768px) {
+            .product-container {
+                flex-direction: column; 
+                margin: 20px auto; 
+                padding: 40px;
+                margin-top: 60px;
+            }
+            .image-section {
+                margin-right: 0; 
+            }
+            .details-section {
+                padding: 10px;
+            }
+            .product-title {
+                font-size: 20px; 
+            }
+            .product-description {
+                font-size: 14px; 
+            }
+            .price {
+                font-size: 20px; 
+            }
+            .cart-btn {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'images/krix.logo.png' %}" alt="Krix Logo">
+            </a>
+            <!-- Cart Icon Outside the Dropdown -->
+            <a class="nav-link d-lg-none me-3" href="{% url 'cart_view' %}">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge bg-danger">{{ request.session.cart_count|default:0 }}</span>
+            </a>
+            <!-- Toggler Button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Dropdown Menu -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'products' %}">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                    <!-- Cart Icon for Desktop -->
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link" href="{% url 'cart_view' %}">
+                            <i class="fas fa-shopping-cart"></i> Cart
+                            <span class="badge bg-danger">{{ request.session.cart_count|default:0 }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-3">
+        <a href="{% url 'products' %}" class="back-arrow">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
+
+    <div class="container product-container">
+        <div class="image-section">
+            <img id="main-image" src="{{ product.image1.url }}" class="product-image" alt="Product Image">
+            <div class="thumbnail-container">
+                <img src="{{ product.image1.url }}" class="thumbnail active" onclick="changeImage(0)">
+                <img src="{{ product.image2.url }}" class="thumbnail" onclick="changeImage(1)">
+                <img src="{{ product.image3.url }}" class="thumbnail" onclick="changeImage(2)">
+            </div>
+        </div>
+        <div class="details-section">
+                    <h2 class="product-title">{{ product.name }}</h2>
+                    <p id="image-desc" class="product-description">{{ product.desc1 }}</p>
+                    <form method="POST" action="{% url 'add_to_cart' product.id %}">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="size">Select Size:</label>
+        <select name="size" id="size" class="form-select" onchange="updatePrice()">
+            <option value="30ml" data-price="{{ product.price_30ml }}">30ml </option>
+            <option value="50ml" data-price="{{ product.price_50ml }}">50ml</option>
+        </select>
+    </div>
+    <p class="price" id="display-price">Price: {{ product.price_30ml }} EGP</p>
+    <div class="quantity-box">
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" class="quantity-input" value="1" min="1">
+    </div>
+    <input type="hidden" name="price" id="hidden-price" value="{{ product.price_30ml }}">
+    <button type="submit" class="cart-btn">Add to Cart</button>
+    <div id="success-popup" class="success-popup">
+                    Product added to cart successfully!
+                </div>
+</form>
+        </div>
+    </div>
+
+
+    <footer class="footer bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">About Krix Perfumes</h5>
+                    <p class="text-muted">
+                        Krix crafts luxury perfumes tailored to your zodiac sign – where astrology meets artistry in every bottle. 🌟🌠
+                        Discover bespoke scents for all 12 signs – blended with rare oils and celestial inspiration.
+                        From bold, adventurous notes to soft, dreamy undertones, your zodiac essence is bottled just for you. 🌙🧴 </p>
+                </div>
+
+                <div class="col-md-2 mb-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'home' %}" class="text-white text-decoration-none">Home</a></li>
+                        <li><a href="{% url 'products' %}" class="text-white text-decoration-none">Products</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-white text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <h5 class="mb-3">Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>dokki, giza</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i>+02 1553546396</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i>krixperfume@gmail.com</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <h5 class="mb-3">Follow Us</h5>
+                    <div class="d-flex">
+                        <a href="https://www.facebook.com/yourpage" class="text-white me-3" target="_blank">
+                            <i class="fab fa-facebook-f fa-lg"></i>
+                        </a>
+                        <a href="https://www.instagram.com/yourprofile" class="text-white me-3" target="_blank">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let images = [
+            { url: "{{ product.image1.url }}", desc: "{{ product.desc1 }}" },
+            { url: "{{ product.image2.url }}", desc: "{{ product.desc2 }}" },
+            { url: "{{ product.image3.url }}", desc: "{{ product.desc3 }}" }
+        ];
+
+        function changeImage(index) {
+            document.getElementById("main-image").src = images[index].url;
+            document.getElementById("image-desc").innerText = images[index].desc;
+            let thumbnails = document.querySelectorAll(".thumbnail");
+            thumbnails.forEach(thumb => thumb.classList.remove("active"));
+            thumbnails[index].classList.add("active");
+        }
+        function updatePrice() {
+            const select = document.getElementById('size');
+            const selectedOption = select.options[select.selectedIndex];
+            const price = selectedOption.getAttribute('data-price');
+            document.getElementById('display-price').innerText = `Price: ${price} EGP`;
+            document.getElementById('hidden-price').value = price;  
+        }
+
+        function showSuccessPopup() {
+            const popup = document.getElementById("success-popup");
+            popup.style.display = "block";
+            setTimeout(() => {
+                popup.style.display = "none";
+            }, 2000); 
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "success" %}
+                    showSuccessPopup();
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+});
+    </script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - Krix</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            margin-top: 100px;
+        }
+
+        .navbar {
+            height: 65px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    
+        }
+        .navbar-brand img {
+            height: 45px;
+        }
+        .nav-link {
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #ff4d6d;
+        }
+
+        .cart-container {
+            margin: 100px auto;
+            max-width: 900px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-table {
+            width: 100%;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .cart-image {
+            width: 60px;
+            height: auto;
+        }
+
+        .remove-btn {
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .remove-btn:hover {
+            background: #e63950;
+        }
+        .navbar-toggler {
+                order: 0; /* Move the toggler to the right */
+            }
+            .navbar-brand {
+                order: 0; /* Keep the logo on the left */
+            }
+            .nav-link.d-lg-none {
+                order: 0; /* Move the cart icon to the middle */
+                margin-left: auto; /* Push it to the right */
+                margin-right: 10px; /* Add some spacing */
+            }
+
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #222;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            transition: 0.3s;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+        .footer {
+                background-color: #222;
+                color: #fff;
+                margin-top: 50px;
+                
+            }
+
+            .footer h5 {
+                color: #ff4d6d;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+
+            .footer a {
+                color: #fff;
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+
+            .footer a:hover {
+                color: #ff4d6d;
+            }
+
+            .footer .text-muted {
+                color: #aaa !important;
+            }
+
+            .footer .border-top {
+                border-color: #444 !important;
+            }
+          
+            @media (max-width: 992px) {
+            .navbar-collapse {
+                background-color: white; 
+                padding: 10px;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            }
+            .navbar-nav .nav-link {
+                color: #333 !important; 
+            }
+            .navbar-nav .nav-link:hover {
+                color: #ff4d6d !important; 
+            }}
+            @media (max-width: 768px) {
+            .cart-container {
+                margin: 20px auto;
+                padding: 10px;
+            }
+
+            .cart-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .cart-table th, .cart-table td {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+
+            .cart-image {
+                width: 40px;
+            }
+
+            .total-price {
+                font-size: 1.2rem;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+                padding: 5px 10px;
+            }
+
+            .footer .col-md-4, .footer .col-md-2, .footer .col-md-3 {
+                margin-bottom: 20px;
+            }}
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'images/krix.logo.png' %}" alt="Krix Logo">
+            </a>
+            <!-- Cart Icon Outside the Dropdown -->
+            <a class="nav-link d-lg-none me-3" href="{% url 'cart_view' %}">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge bg-danger">{{ request.session.cart_count|default:0 }}</span>
+            </a>
+            <!-- Toggler Button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Dropdown Menu -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'products' %}">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                    <!-- Cart Icon for Desktop -->
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link" href="{% url 'cart_view' %}">
+                            <i class="fas fa-shopping-cart"></i> Cart
+                            <span class="badge bg-danger">{{ request.session.cart_count|default:0 }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container cart-container">
+        <h2 class="text-center">Your Cart</h2>
+        {% if cart %}
+            <table class="cart-table">
+                <tr>
+                    <th>Product</th>
+                    <th>Image</th>
+                    <th>Size</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                  
+                </tr>
+                {% for key, item in cart.items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td><img class="cart-image" src="{{ item.image }}" alt="Product Image"></td>
+                    <td>{{ item.size }}</td>
+                    <td>{{ item.price|floatformat:2 }} EGP</td>
+                <td>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <form method="post" action="{% url 'update_cart' key 'decrease' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger mx-1">−</button>
+                        </form>
+                        <span class="mx-2">{{ item.quantity }}</span>
+                        <form method="post" action="{% url 'update_cart' key 'increase' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-success mx-1">+</button>
+                        </form>
+                    </div>
+                </td>
+                    <td>{{ item.total_price|floatformat:2 }} EGP</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+            <div class="text-center mt-3">
+                <form method="post" action="{% url 'clear_cart' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Clear Cart</button>
+                </form>
+            </div>
+            
+           
+            <p class="total-price">Total: {{ total_price|floatformat:2 }}EGP</p>
+            <div class="text-center mt-3">
+                <a href="{% url 'check_out' %}" class="btn btn-success">Proceed to Checkout</a> 
+            </div>
+      
+            
+        {% else %}
+            <p class="text-center">Your cart is empty.</p>
+        {% endif %}
+        <div class="text-center mt-3">
+            <a href="{% url 'products' %}" class="btn btn-dark">Continue Shopping</a>
+        </div>
+    </div> 
+
+<footer class="footer bg-dark text-white py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h5 class="mb-3">About Krix Perfumes</h5>
+                <p class="text-muted">
+                    Krix crafts luxury perfumes tailored to your zodiac sign – where astrology meets artistry in every bottle. 🌟🌠
+                    Discover bespoke scents for all 12 signs – blended with rare oils and celestial inspiration.
+                    From bold, adventurous notes to soft, dreamy undertones, your zodiac essence is bottled just for you. 🌙🧴 </p>
+            </div>
+
+            <div class="col-md-2 mb-4">
+                <h5 class="mb-3">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'home' %}" class="text-white text-decoration-none">Home</a></li>
+                    <li><a href="{% url 'products' %}" class="text-white text-decoration-none">Products</a></li>
+                    <li><a href="{% url 'contact' %}" class="text-white text-decoration-none">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <h5 class="mb-3">Contact Us</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>dokki,giza</li>
+                            <li class="mb-2"><i class="fas fa-phone me-2"></i>+02 1553546396</li>
+                            <li class="mb-2"><i class="fas fa-envelope me-2"></i>krixperfume@gmail.com</li>
+                </ul>
+            </div>
+
+            <div class="col-md-3 mb-4">
+    <h5 class="mb-3">Follow Us</h5>
+    <div class="d-flex">
+        <a href="https://www.facebook.com/yourpage" class="text-white me-3" target="_blank">
+            <i class="fab fa-facebook-f fa-lg"></i>
+        </a>
+        
+        <a href="https://www.instagram.com/yourprofile" class="text-white me-3" target="_blank">
+            <i class="fab fa-instagram fa-lg"></i>
+        </a>
+    
+    </div>
+</div>
+        </div>
+    </div>
+</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

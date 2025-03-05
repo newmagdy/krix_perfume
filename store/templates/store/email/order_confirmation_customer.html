@@ -1,0 +1,9 @@
+<h2>Thank you for your order, {{ order.full_name }}!</h2>
+<p>Your order has been confirmed. Here are the details:</p>
+<ul>
+    {% for key, item in cart.items %}
+        <li>{{ item.name }} - Size: {{ item.size }} - Quantity: {{ item.quantity }} - Price: ${{ item.price }}</li>
+    {% endfor %}
+</ul>
+<p>Total Price: ${{ order.total_price }}</p>
+<p>We will contact you soon to confirm the delivery process.</p>

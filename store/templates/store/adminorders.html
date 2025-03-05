@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Confirmed Orders</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #343a40;
+            color: white;
+            border-radius: 5px;
+        }
+        .header-bar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .header-bar a.btn {
+            color: white;
+        }
+        .items-list {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+        .items-list li {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="container mt-4">
+
+<div class="header-bar">
+    <h2>Confirmed Orders</h2>
+    <div>
+        <a href="?logout=true" class="btn btn-danger">Logout</a>
+    </div>
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Order ID</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>City</th>
+            <th>Total Price (EGP)</th>
+            <th>Shipping Method</th>
+            <th>Payment Method</th>
+            <th>Order Items</th>
+            <th>Additional Info</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.order_id }}</td>
+            <td>{{ order.full_name }}</td>
+            <td><a href="mailto:{{ order.email }}">{{ order.email }}</a></td>
+            <td><a href="tel:{{ order.phone_number }}">{{ order.phone_number }}</a></td>
+            <td>{{ order.city }}</td>
+            <td>{{ order.total_price }}</td>
+            <td>{{ order.shipping_method }}</td>
+            <td>
+                {% if order.payment_method == 'cash_on_delivery' %}
+                    <span class="badge bg-warning text-dark">Cash on Delivery</span>
+                {% elif order.payment_method == 'instapay' %}
+                    <span class="badge bg-success">Instapay</span>
+                {% else %}
+                    {{ order.payment_method }}
+                {% endif %}
+            </td>
+            <td>
+                <ul class="items-list">
+                    {% for item in order.items.all %}
+                        <li>{{ item.product_name }} - <strong>{{ item.quantity }}</strong> pcs ({{ item.size|default:"N/A" }})</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>{{ order.additional_info|default:"-" }}</td>
+            <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="?logout=true" class="btn btn-danger mt-3">Logout</a>
+
+</body>
+</html>
